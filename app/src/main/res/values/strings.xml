@@ -6,4 +6,6 @@
     <string name="save_menu">Save</string>
     <string name="textview">TextView</string>
     <string name="delete_menu">Delete Deal</string>
+    <string name="logout">Logout</string>
+    <string name="new_travel_deal">New Travel Deal</string>
 </resources>
