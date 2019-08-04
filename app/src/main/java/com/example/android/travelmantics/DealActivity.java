@@ -3,6 +3,7 @@ package com.example.android.travelmantics;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ClipData;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,12 +14,13 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class InsertActivity extends AppCompatActivity {
+public class DealActivity extends AppCompatActivity {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
     EditText textTitle;
     EditText textPrice;
     EditText textDescription;
+    TravelDeal deal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,16 @@ public class InsertActivity extends AppCompatActivity {
         textTitle = findViewById(R.id.txtTitle);
         textPrice = findViewById(R.id.txtPrice);
         textDescription = findViewById(R.id.txtDescription);
+        Intent intent = getIntent();
+        TravelDeal deal = (TravelDeal) intent.getSerializableExtra("Deal");
+
+        if(deal == null){
+            deal = new TravelDeal();
+        }
+        this.deal = deal;
+        textTitle.setText(deal.getTitle());
+        textDescription.setText(deal.getDescription());
+        textPrice.setText(deal.getPrice());
 
     }
 
@@ -40,6 +52,15 @@ public class InsertActivity extends AppCompatActivity {
                 saveDeal();
                 Toast.makeText(this,"Deal Saved",Toast.LENGTH_LONG).show();
                 clean();
+                backToList();
+                return true;
+
+            case R.id.delete_menu:
+                deleteDeal();
+                Toast.makeText(this,"Deal Deleted",Toast.LENGTH_LONG).show();
+                backToList();
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -53,11 +74,28 @@ public class InsertActivity extends AppCompatActivity {
     }
 
     private void saveDeal() {
-        String title = textTitle.getText().toString();
-        String price = textPrice.getText().toString();
-        String description = textDescription.getText().toString();
-        TravelDeal deal = new TravelDeal(title,description,price,"");
-        mDatabaseReference.push().setValue(deal);
+        deal.setTitle(textTitle.getText().toString());
+        deal.setPrice(textPrice.getText().toString());
+        deal.setDescription(textDescription.getText().toString());
+        if(deal.getId() == null){
+            mDatabaseReference.push().setValue(deal);
+        }else {
+            mDatabaseReference.child(deal.getId()).setValue(deal);
+        }
+    }
+
+    private void deleteDeal(){
+        if(deal.getId() == null){
+            Toast.makeText(this,"Please save deal before deleting it", Toast.LENGTH_SHORT).show();
+            return;
+        }else {
+            mDatabaseReference.child(deal.getId()).removeValue();
+        }
+    }
+
+    private void backToList(){
+        Intent intent = new Intent(this, ListActivity.class);
+        startActivity(intent);
     }
 
     @Override

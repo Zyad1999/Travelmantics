@@ -1,6 +1,10 @@
 package com.example.android.travelmantics;
 
-public class TravelDeal {
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
+public class TravelDeal implements Serializable {
 
     private String id;
     private String title;

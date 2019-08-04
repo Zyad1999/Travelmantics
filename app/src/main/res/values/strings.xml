@@ -3,6 +3,7 @@
     <string name="deal_title">Deal Title</string>
     <string name="deal_price">Deal Price</string>
     <string name="deal_description">Deal Description</string>
-    <string name="save_menu">save</string>
+    <string name="save_menu">Save</string>
     <string name="textview">TextView</string>
+    <string name="delete_menu">Delete Deal</string>
 </resources>
